@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text Editor</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="index.js"></script>
+</head>
+<body>
+
+
+<div id="editor-root">
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="toolbar-group">
+      <select class="font-select" onchange="execCmd('fontName', this.value)">
+        <option value="DM Sans, sans-serif">DM Sans</option>
+        <option value="Playfair Display, serif">Playfair</option>
+        <option value="DM Mono, monospace">Mono</option>
+        <option value="Georgia, serif">Georgia</option>
+      </select>
+      <select class="size-select" onchange="execCmd('fontSize', this.value)">
+        <option value="2">12</option>
+        <option value="3" selected>16</option>
+        <option value="4">18</option>
+        <option value="5">24</option>
+        <option value="6">32</option>
+        <option value="7">48</option>
+      </select>
+    </div>
+
+    <div class="sep"></div>
+
+    <div class="toolbar-group">
+      <button class="tb-btn" id="btn-b" onclick="fmt('bold')" title="Bold">
+        <svg viewBox="0 0 24 24"><path d="M6 4h8a4 4 0 0 1 0 8H6z"/><path d="M6 12h9a4 4 0 0 1 0 8H6z"/></svg>
+      </button>
+      <button class="tb-btn" id="btn-i" onclick="fmt('italic')" title="Italic">
+        <svg viewBox="0 0 24 24"><line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/></svg>
+      </button>
+      <button class="tb-btn" id="btn-u" onclick="fmt('underline')" title="Underline">
+        <svg viewBox="0 0 24 24"><path d="M6 3v7a6 6 0 0 0 12 0V3"/><line x1="4" y1="21" x2="20" y2="21"/></svg>
+      </button>
+      <button class="tb-btn" id="btn-s" onclick="fmt('strikeThrough')" title="Strikethrough">
+        <svg viewBox="0 0 24 24"><path d="M16 4H9a3 3 0 0 0-2.83 4"/><path d="M14 20.7a4 4 0 0 1-3.3-.7c-1.7-1.6-1.5-4 0-5.3"/><line x1="4" y1="12" x2="20" y2="12"/></svg>
+      </button>
+    </div>
+
+    <div class="sep"></div>
+
+    <div class="toolbar-group">
+      <button class="tb-btn" onclick="insertBlock('h1')" title="Heading 1">
+        <svg viewBox="0 0 24 24"><path d="M4 12h8M4 6v12M12 6v12"/><path d="M17 12h3M19 7v10"/></svg>
+      </button>
+      <button class="tb-btn" onclick="insertBlock('h2')" title="Heading 2">
+        <svg viewBox="0 0 24 24"><path d="M4 12h8M4 6v12M12 6v12"/><path d="M17 8c0-1.1.9-2 2-2 1.7 0 2.6 2 1 3l-3 4h4"/></svg>
+      </button>
+      <button class="tb-btn" onclick="insertBlock('blockquote')" title="Quote">
+        <svg viewBox="0 0 24 24"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>
+      </button>
+      <button class="tb-btn" onclick="insertBlock('code')" title="Code">
+        <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      </button>
+      <button class="tb-btn" onclick="insertBlock('ul')" title="Bullet list">
+        <svg viewBox="0 0 24 24"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4" cy="6" r="1" fill="currentColor" stroke="none"/><circle cx="4" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="4" cy="18" r="1" fill="currentColor" stroke="none"/></svg>
+      </button>
+      <button class="tb-btn" onclick="insertBlock('ol')" title="Numbered list">
+        <svg viewBox="0 0 24 24"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+      </button>
+      <button class="tb-btn" onclick="insertBlock('hr')" title="Divider">
+        <svg viewBox="0 0 24 24"><line x1="2" y1="12" x2="22" y2="12"/></svg>
+      </button>
+    </div>
+
+    <div class="sep"></div>
+
+    <div class="toolbar-group">
+      <button class="tb-btn" onclick="execCmd('justifyLeft')" title="Align left">
+        <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg>
+      </button>
+      <button class="tb-btn" onclick="execCmd('justifyCenter')" title="Align center">
+        <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+      </button>
+      <button class="tb-btn" onclick="execCmd('justifyRight')" title="Align right">
+        <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="9" y1="12" x2="21" y2="12"/><line x1="6" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+
+    <div class="sep"></div>
+
+    <div class="toolbar-group">
+      <div class="color-row">
+        <div class="color-dot active" style="background:#f0f0f5" onclick="setColor('#f0f0f5',this)" title="White"></div>
+        <div class="color-dot" style="background:#7c6aff" onclick="setColor('#7c6aff',this)" title="Violet"></div>
+        <div class="color-dot" style="background:#a855f7" onclick="setColor('#a855f7',this)" title="Purple"></div>
+        <div class="color-dot" style="background:#06b6d4" onclick="setColor('#06b6d4',this)" title="Cyan"></div>
+        <div class="color-dot" style="background:#10b981" onclick="setColor('#10b981',this)" title="Green"></div>
+        <div class="color-dot" style="background:#f59e0b" onclick="setColor('#f59e0b',this)" title="Amber"></div>
+        <div class="color-dot" style="background:#ef4444" onclick="setColor('#ef4444',this)" title="Red"></div>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <div class="toolbar-group">
+      <button class="tb-btn" onclick="execCmd('undo')" title="Undo">
+        <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.36"/></svg>
+      </button>
+      <button class="tb-btn" onclick="execCmd('redo')" title="Redo">
+        <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.49-3.36"/></svg>
+      </button>
+    </div>
+
+    <div class="sep"></div>
+
+    <button class="tb-btn" onclick="toggleFind()" title="Find (Ctrl+F)" style="width:auto;padding:0 10px;gap:5px;font-size:12px;color:var(--text2);">
+      <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Find
+    </button>
+  </div>
+
+  <!-- FIND BAR -->
+  <div class="find-bar" id="findBar">
+    <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:var(--text3);fill:none;stroke-width:1.8;stroke-linecap:round;flex-shrink:0"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input class="find-input" id="findInput" placeholder="Search text…" oninput="doFind()" />
+    <span class="find-label" id="findCount">–</span>
+    <button class="find-close" onclick="toggleFind()">✕</button>
+  </div>
+
+  <!-- TITLE AREA -->
+  <div class="title-bar">
+    <input class="doc-title" id="docTitle" placeholder="Untitled document" oninput="updateMeta()" />
+    <div class="doc-meta" id="docMeta">0 words · 0 chars · just now</div>
+  </div>
+  <div class="title-divider"></div>
+
+  <!-- EDITOR -->
+  <div class="editor-wrap">
+    <div
+      class="editor-area"
+      id="editor"
+      contenteditable="true"
+      spellcheck="true"
+      data-placeholder="Start writing your masterpiece…"
+      oninput="onEdit()"
+      onkeydown="handleKey(event)"
+      onmouseup="updateActiveStates()"
+      onkeyup="updateActiveStates()"
+    ></div>
+  </div>
+
+  <!-- STATUS BAR -->
+  <div class="status-bar">
+    <div class="status-left">
+      <div class="stat-item">Words: <span id="statWords">0</span></div>
+      <div class="stat-item">Chars: <span id="statChars">0</span></div>
+      <div class="stat-item">Read time: <span id="statRead">0 min</span></div>
+      <div class="stat-item">Lines: <span id="statLines">0</span></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span class="saved-badge" id="savedBadge">✓ Saved</span>
+      <button class="save-btn" onclick="saveDoc()">
+        <svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Save
+      </button>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>
