@@ -1,3 +1,5 @@
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,600;1,600&display=swap');
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 /* ── CUSTOM CURSOR ── */
@@ -119,8 +121,8 @@ nav {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-family: 'Playfair Display', serif;
   font-size: 20px;
+  font-family: michroma;
   color: var(--text);
   text-decoration: none;
 }
