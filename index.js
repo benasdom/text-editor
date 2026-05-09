@@ -96,21 +96,26 @@ themeToggle.addEventListener('click', () => {
 
 // ── Custom cursor ─────────────────────────
 (function initCursor() {
-  const cur  = document.getElementById('cursor');
+  const cur = document.getElementById('cursor');
   const ring = document.getElementById('cursor-ring');
-  let rx = 0, ry = 0;
-  document.addEventListener('mousemove', e => {
-    cur.style.left  = e.clientX + 'px';
-    cur.style.top   = e.clientY + 'px';
-    rx += (e.clientX - rx) * 0.12;
-    ry += (e.clientY - ry) * 0.12;
-    ring.style.left = rx + 'px';
-    ring.style.top  = ry + 'px';
+  let mouseX = 0, mouseY = 0;
+  let ringX = 0, ringY = 0;
+  
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    cur.style.left = mouseX + 'px';
+    cur.style.top = mouseY + 'px';
   });
-  setInterval(() => {
-    ring.style.left = rx + 'px';
-    ring.style.top  = ry + 'px';
-  }, 16);
+  
+  function animateRing() {
+    ringX += (mouseX - ringX) * 0.15;
+    ringY += (mouseY - ringY) * 0.15;
+    ring.style.left = ringX + 'px';
+    ring.style.top = ringY + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
 })();
 
 // ── Document CRUD ─────────────────────────
