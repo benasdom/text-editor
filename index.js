@@ -139,6 +139,9 @@ themeToggle.addEventListener('click', () => {
 
 // ── Document CRUD ─────────────────────────
 function newDoc() {
+    if(!confirm("Create a new empty document?")){
+        return false
+    }
   const doc = {
     id:       genId(),
     title:    '',
